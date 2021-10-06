@@ -53,7 +53,7 @@ function setup() {
     }
 
     start = grid[0][0]; // Starting node top left corner note both start and end is an instance of the SPOT class
-    end = grid[cols - 1][rows - 1]; // end node ur searching for,  right bottom corner
+    end = grid[cols - 1][rows - 1]; // end Spot node ur searching for,  right bottom corner
     openSet.push(start);
 }
 
@@ -61,23 +61,44 @@ function setup() {
 function draw() {
     // if openSet is empty that means there is no more "Spot" left to be evaluated. This means that we either found the optimal path or there is no path
     if (openSet.length > 0) {
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                //grid[i][j] is a spot therefore it can use a custom method made called show
-                grid[i][j].show(color(255));
+        // Keep track of the winner index, start at 0
+        var winnerIndex = 0;
+        for (let i = 0; i < openSet.length; i++) {
+            //In a * algorithim the highest f score is the best path
+            //We are iterating though openSet[i] and comparing its .f score to the one we deem the "winnerIndex" as of rn.
+            if (openSet[i].f < openSet[winnerIndex].f) {
+                winnerIndex = i;
             }
         }
+
+        // current is always the spot with the highest f score currently
+        var current = openSet[winnerIndex];
+        if (current === end) {
+            console.log('Done, fastest path calculated');
+        }
+        // We remove the current from openSet and add to closedSet as it is not the end spot or destination we wanted to reach
+        closedSet.push(current);
+        openSet.filter((spot) => {
+            spot !== current;
+        });
     } else {
     }
 
     //---------------------------------------------------------------------------
+    //MAke every spot white change it's color depending if it becomes part of openSet or closeSet
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            //grid[i][j] is a spot therefore it can use a custom method made called show
+            grid[i][j].show(color(255));
+        }
+    }
     //Keep track of which spot is part of openSet and closeSet good for debugging
     for (let i = 0; i < openSet.length; i++) {
         //openSet[i] is an instance of Spot class therefore can use the show() method
         openSet[i].show(color(0, 255, 0));
     }
-    for (let i = 0; i < closeSet.length; i++) {
+    for (let i = 0; i < closedSet.length; i++) {
         //openSet[i] is an instance of Spot class therefore can use the show() method
-        closeSet[i].show(color(255, 0, 0));
+        closedSet[i].show(color(255, 0, 0));
     }
 }
