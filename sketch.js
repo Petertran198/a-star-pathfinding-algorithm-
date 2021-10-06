@@ -12,7 +12,8 @@ function Spot(i, j) {
     this.g = 0;
     this.h = 0;
 
-    this.show = function () {
+    this.show = function (colorNumber) {
+        fill(colorNumber);
         //method to draw rectangle spot
         //(first two params is location while the next two is width & height )
         rect(this.x * w, this.y * h, w - 1, h - 1);
@@ -27,7 +28,7 @@ var end; //end node
 //Setup Method gotten from the p5.js lib
 function setup() {
     createCanvas(450, 450);
-
+    // w = 90 if width is 450 and cols is 5.     450/5 = 90
     w = width / cols;
     h = height / rows;
 
@@ -51,7 +52,7 @@ function setup() {
         }
     }
 
-    start = grid[0][0]; // Starting node top left corner
+    start = grid[0][0]; // Starting node top left corner note both start and end is an instance of the SPOT class
     end = grid[cols - 1][rows - 1]; // end node ur searching for,  right bottom corner
     openSet.push(start);
 }
@@ -63,9 +64,20 @@ function draw() {
         for (let i = 0; i < cols; i++) {
             for (let j = 0; j < rows; j++) {
                 //grid[i][j] is a spot therefore it can use a custom method made called show
-                grid[i][j].show();
+                grid[i][j].show(color(255));
             }
         }
     } else {
+    }
+
+    //---------------------------------------------------------------------------
+    //Keep track of which spot is part of openSet and closeSet good for debugging
+    for (let i = 0; i < openSet.length; i++) {
+        //openSet[i] is an instance of Spot class therefore can use the show() method
+        openSet[i].show(color(0, 255, 0));
+    }
+    for (let i = 0; i < closeSet.length; i++) {
+        //openSet[i] is an instance of Spot class therefore can use the show() method
+        closeSet[i].show(color(255, 0, 0));
     }
 }
